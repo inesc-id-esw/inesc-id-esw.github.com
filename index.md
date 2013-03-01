@@ -23,49 +23,98 @@ file or your Maven global `settings.xml` file.
 
 # Available Downloads
 
-## Atomic Annotation
+## Advice Library
 
-Put this in your maven project to use the Atomic Annotation library:
+This is a annotation-based advice-like mechanism.  It allows the programmers
+to annotate methods as being advised.  Then, when such advised method is
+called, the associated advice is executed, **instead** of the method.  It is
+up to the advice to decide whether to actually call the method.  For this to
+work as intended the programmer needs to select the annotation to use as an
+advice and:
+
+  1. run the `pt.ist.esw.advice.GenerateAnnotationInstance` to generate the
+  AnnotationInstance class that represents the selected annotation instance.
+  This class will be used internally.
+  
+  2. Define the `pt.ist.esw.advice.impl.ClientAdviceFactory` which
+  takes the selected annotation instance and should return the
+  `pt.ist.esw.advice.Advice` that will be called when an advised method is
+  called.
+  
+  3. Run `pt.ist.esw.advice.ProcessAnnotations` to post-process the
+  compiled classes.  This will search the presence of the advised annotation
+  and replace the original method with another method that runs the advice.
+  It also creates a callable to the original advised method that is given to
+  the execution of the Advice (in the `perform` method).
+  
+To use this library, put this in your maven project.
 
     <dependencies>
         <dependency>
             <groupId>pt.ist.esw</groupId>
-            <artifactId>atomic-annotation</artifactId>
-            <version>1.0</version>
+            <artifactId>advice</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
     
-Alternative you can browse the files in the repository and directly download
-the latest JAR file available.
+Alternatively, you can browse the files in the repository and directly
+download the latest JAR file available.
 
-To effectively use this library, your compiled code that makes use of the
-@Atomic annotation needs to be post-processed using the
-`pt.ist.esw.atomicannotation.ProcessAtomicAnnotations` program.  It takes as
-parameter a directory containing class files to process.  In Maven just add
-the following, or equivalent, to the `<plugins>` section in your POM:
+In Maven just add the following, or equivalent, to the `<plugins>` section in
+your POM.
 
-    <!-- ProcessAtomicAnnotations immediatly after compiling -->
+### To generate the annotation instance
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${version.maven.exec-plugin}</version>
+            <executions>
+                <execution>
+                    <id>generate-annotation-instance</id>
+                    <phase>process-test-classes</phase>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                    <configuration>
+                        <classpathScope>test</classpathScope>
+                        <mainClass>pt.ist.esw.advice.GenerateAnnotationInstance</mainClass>
+                        <arguments>
+                            <argument>${annotation.name}</argument>
+                            <argument>${project.build.outputDirectory}</argument>
+                        </arguments>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+
+### To process the uses of the annotation
+
     <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions>
+        <version>${version.maven.exec-plugin}</version>
             <execution>
-                <phase>process-classes</phase>
+                <id>process-annotations</id>
+                <phase>process-test-classes</phase>
                 <goals>
                     <goal>java</goal>
                 </goals>
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                    <mainClass>pt.ist.esw.advice.ProcessAnnotations</mainClass>
+                    <arguments>
+                        <argument>${annotation.name}</argument>
+                        <argument>${project.build.testOutputDirectory}</argument>
+                    </arguments>
+                </configuration>
             </execution>
         </executions>
-        <configuration>
-            <mainClass>pt.ist.esw.atomicannotation.ProcessAtomicAnnotations</mainClass>
-            <arguments>
-                <argument>${project.build.outputDirectory}</argument>
-            </arguments>
-        </configuration>
     </plugin>
 
-
+Replace `${annotation.name}` the name fully-qualified class name of your
+annotation.
 
 # Contact
 
