@@ -72,12 +72,11 @@ your POM.
             <executions>
                 <execution>
                     <id>generate-annotation-instance</id>
-                    <phase>process-test-classes</phase>
+                    <phase>process-classes</phase>
                     <goals>
                         <goal>java</goal>
                     </goals>
                     <configuration>
-                        <classpathScope>test</classpathScope>
                         <mainClass>pt.ist.esw.advice.GenerateAnnotationInstance</mainClass>
                         <arguments>
                             <argument>${annotation.name}</argument>
@@ -97,16 +96,15 @@ your POM.
         <version>${version.maven.exec-plugin}</version>
             <execution>
                 <id>process-annotations</id>
-                <phase>process-test-classes</phase>
+                <phase>process-classes</phase>
                 <goals>
                     <goal>java</goal>
                 </goals>
                 <configuration>
-                    <classpathScope>test</classpathScope>
                     <mainClass>pt.ist.esw.advice.ProcessAnnotations</mainClass>
                     <arguments>
                         <argument>${annotation.name}</argument>
-                        <argument>${project.build.testOutputDirectory}</argument>
+                        <argument>${project.build.outputDirectory}</argument>
                     </arguments>
                 </configuration>
             </execution>
