@@ -2,12 +2,12 @@
 layout: page
 ---
 
-# INESC-ID's Software Engineering Group
-
-## Available Software Downloads
+# Available Software Downloads
 
  * [Advice Library](http://inesc-id-esw.github.com/advice)
-
+ * [DeuceSTM with LICM](http://inesc-id-esw.github.io/deucestm/)
+ * [JVSTM Java Versioned STM](http://inesc-id-esw.github.io/jvstm/)
+ * [JWormBench](http://inesc-id-esw.github.io/jwormbench/)
 
 # Contact
 
