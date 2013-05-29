@@ -7,5 +7,4 @@ pygments: true
 # to point to the _site directory (full-path).  This is necessary if the
 # {baseurl} is used in any templates
 
-# baseurl: http://inesc-id-esw.github.com
-
+baseurl: http://inesc-id-esw.github.io/

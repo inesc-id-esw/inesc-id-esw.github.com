@@ -1,6 +1,5 @@
 ---
 layout: page
-title: INESC-ID's Software Engineering Group
 ---
 
 # INESC-ID's Software Engineering Group
